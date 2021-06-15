@@ -40,7 +40,7 @@
             $.each(response.data.portfolio_list, function (index, p) {
                 var tokenList = "";
                 $.each(p.detail.supply_token_list,function (index, x) {
-                    tokenList+= x.display_symbol + "/";
+                    tokenList+= x.symbol + "/";
                 });
                 tokenList = tokenList.slice(0, -1);
                 $('<div/>', {
