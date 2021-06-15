@@ -16,8 +16,8 @@ $(document).ready(function() {
         url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
     }).then(function(data) {
        console.log(data);
-	    $("#tot").html(data.portfolio_list[0].stats.net_usd_value);
-        $("#profit").html(data.portfolio_list[0].stats.daily_yield_usd_value);
+	    $("#tot").html(data.data.portfolio_list[0].stats.net_usd_value);
+        $("#profit").html(data.data.portfolio_list[0].stats.daily_yield_usd_value);
     });
 });
 </script>
