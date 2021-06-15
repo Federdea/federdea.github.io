@@ -1,40 +1,51 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
+
 <head>
-	<title>Page Title</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 </head>
 
 <body style="background-color: #4BB543;">
     <div style="visibility: hidden;">...</div>
-	<div id="tot">...</div>
+    <div id="tot">...</div>
     <div id="profit">...</div>
     <div><span style='font-size:100px;'>&#128640;</span></div>
 </body>
-  <script>
-$(document).ready(function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const address = urlParams.get('w');
-    $.ajax({
-        // url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
-        url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=" + address
-    }).then(function(data) {
-       console.log(data);
-	    $("#tot").html(data.data.portfolio_list[0].stats.net_usd_value.toFixed(2));
-        $("#profit").html(data.data.portfolio_list[0].stats.daily_yield_usd_value.toFixed(2));
+<script>
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const address = urlParams.get('w');
+        $.ajax({
+            // url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
+            url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=" + address
+        }).then(function (response) {
+            console.log(response);
+            // $("#tot").html(response.data.portfolio_list[0].stats.net_usd_value.toFixed(2));
+            // $("#profit").html(response.data.portfolio_list[0].stats.daily_yield_usd_value.toFixed(2));
+
+            var mainTot;
+            var mainProfit;
+            $.each(response.data.portfolio_list, function (index, p) {
+                mainTot += p.stats.net_usd_value;
+                mainProfit += p.stats.daily_yield_usd_value;
+                $("#tot").html(mainTot.toFixed(2));
+                $("#profit").html(mainProfit.toFixed(2));
+            });
+
+        });
     });
-});
 </script>
+
 </html>
 <style>
-div
-{
-    font-family: 'Roboto', sans-serif;
-    color: white;
-    font-size: 60pt;
-    text-align: center;
-}
+    div {
+        font-family: 'Roboto', sans-serif;
+        color: white;
+        font-size: 60pt;
+        text-align: center;
+    }
 </style>
