@@ -27,8 +27,8 @@
             // $("#tot").html(response.data.portfolio_list[0].stats.net_usd_value.toFixed(2));
             // $("#profit").html(response.data.portfolio_list[0].stats.daily_yield_usd_value.toFixed(2));
 
-            var mainTot;
-            var mainProfit;
+            var mainTot = 0;
+            var mainProfit = 0;
             $.each(response.data.portfolio_list, function (index, p) {
                 mainTot += p.stats.net_usd_value;
                 mainProfit += p.stats.daily_yield_usd_value;
