@@ -44,6 +44,9 @@
                 $.each(p.detail.supply_token_list,function (index, x) {
                     tokenList+= x.symbol + "/";
                 });
+                $.each(p.detail.supply_token_list,function (index, x) {
+                    tokenList+= x.amount * x.price.toFixed(2);
+                });
                 tokenList = tokenList.slice(0, -1);
                 $('<div/>', {
                     // id: someID,
