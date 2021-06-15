@@ -44,10 +44,10 @@
                 $.each(p.detail.supply_token_list,function (index, x) {
                     tokenList+= x.symbol + "/";
                 });
+                tokenList = tokenList.slice(0, -1);
                 $.each(p.detail.supply_token_list,function (index, x) {
                     tokenList+= x.amount * x.price.toFixed(2);
                 });
-                tokenList = tokenList.slice(0, -1);
                 $('<div/>', {
                     // id: someID,
                     // className: 'foobar',
