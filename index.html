@@ -21,6 +21,7 @@
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
         const address = urlParams.get('w');
+        if (address == "" || address == null) { address = "0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe" }
         $.ajax({
             // url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
             url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=" + address
