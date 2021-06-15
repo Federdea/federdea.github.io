@@ -14,6 +14,7 @@
     <div id="tot">...</div>
     <div id="profit">...</div>
     <div><span style='font-size:100px;'>&#128640;</span></div>
+    <div id="details"></div>
 </body>
 <script>
     $(document).ready(function () {
@@ -32,11 +33,22 @@
             $.each(response.data.portfolio_list, function (index, p) {
                 mainTot += p.stats.net_usd_value;
                 mainProfit += p.stats.daily_yield_usd_value;
-                //
                 $("#tot").html(mainTot.toFixed(2));
                 $("#profit").html(mainProfit.toFixed(2));
             });
 
+            $.each(response.data.portfolio_list, function (index, p) {
+                var tokenList = "";
+                $.each(p.detail.supply_token_list,function (index, x) {
+                    tokenList+= x.display_symbol + "/";
+                });
+                tokenList = tokenList.slice(0, -1);
+                $('<div/>', {
+                    // id: someID,
+                    // className: 'foobar',
+                    html: tokenList
+                }).appendTo("#details");
+            });
         });
     });
 </script>
