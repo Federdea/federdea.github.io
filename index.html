@@ -7,14 +7,17 @@
 </head>
 
 <body>
-	...content goes here...
+	<div id="tot"></div>
+    <div id="profit"></div>
 </body>
   <script>
 $(document).ready(function() {
     $.ajax({
         url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
     }).then(function(data) {
-       console.log(data)
+       console.log(data);
+	    $("#tot").html(data.portfolio_list[0].stats.net_usd_value);
+        $("#profit").html(data.portfolio_list[0].stats.daily_yield_usd_value);
     });
 });
 </script>
