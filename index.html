@@ -1,80 +1,84 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Brrr</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
-</head>
-
-<body style="background-color: #4BB543;">
-    <div class="main" style="visibility: hidden;">...</div>
-    <div class="main" id="tot">...</div>
-    <div class="main" id="profit">...</div>
-    <div class="main" onclick='window.location.reload()'><span style='font-size:100px;'>&#128640;</span></div>
-    <div class="main" style="visibility: hidden;">...</div>
-    <div id="details"></div>
-</body>
+<div data-role="page" id="demo-page" data-url="demo-page">
+    <div data-role="header" data-theme="b">
+        <h1>Swipe left or right</h1>
+        <a href="#left-panel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+            class="ui-nodisc-icon">Open left panel</a>
+        <a href="#right-panel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false"
+            class="ui-nodisc-icon">Open right panel</a>
+    </div><!-- /header -->
+    <div role="main" class="ui-content">
+        <dl>
+            <dt>Swipe <span>verb</span></dt>
+            <dd><b>1.</b> to strike or move with a sweeping motion</dd>
+        </dl>
+        <a href="#demo-intro" data-rel="back"
+            class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to
+            demo intro</a>
+    </div><!-- /content -->
+    <div data-role="panel" id="left-panel" data-theme="b">
+        <p>Left reveal panel.</p>
+        <a href="#" data-rel="close"
+            class="ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-right">Close</a>
+    </div><!-- /panel -->
+    <div data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="b">
+        <p>Right push panel.</p>
+        <a href="#" data-rel="close"
+            class="ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-delete ui-btn-icon-right">Close</a>
+    </div><!-- /panel -->
+</div>
 <script>
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        var address = urlParams.get('w');
-        if (address == "" || address == null) { address = "0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe" }
-        $.ajax({
-            // url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
-            url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=" + address
-        }).then(function (response) {
-            console.log(response);
-            // $("#tot").html(response.data.portfolio_list[0].stats.net_usd_value.toFixed(2));
-            // $("#profit").html(response.data.portfolio_list[0].stats.daily_yield_usd_value.toFixed(2));
-
-            var mainTot = 0;
-            var mainProfit = 0;
-            $.each(response.data.portfolio_list, function (index, p) {
-                mainTot += p.stats.net_usd_value;
-                mainProfit += p.stats.daily_yield_usd_value;
-                $("#tot").html("$" + mainTot.toFixed(2));
-                $("#profit").html("$" + mainProfit.toFixed(2));
-            });
-
-            $.each(response.data.portfolio_list, function (index, p) {
-                var tokenList = "";
-                var val = 0;
-                $.each(p.detail.supply_token_list, function (index, x) {
-                    tokenList += x.symbol + "/";
-                });
-                tokenList = tokenList.slice(0, -1);
-                $.each(p.detail.supply_token_list, function (index, x) {
-                    val = val + +((x.amount * x.price).toFixed(2));
-                });
-                tokenList += " $" + val.toFixed(2);
-                $('<div/>', {
-                    // id: someID,
-                    // className: 'foobar',
-                    html: tokenList
-                }).appendTo("#details");
-            });
+    $(document).on("pagecreate", "#demo-page", function () {
+        $(document).on("swipeleft swiperight", "#demo-page", function (e) {
+            // We check if there is no open panel on the page because otherwise
+            // a swipe to close the left panel would also open the right panel (and v.v.).
+            // We do this by checking the data that the framework stores on the page element (panel: open).
+            if ($(".ui-page-active").jqmData("panel") !== "open") {
+                if (e.type === "swipeleft") {
+                    $("#right-panel").panel("open");
+                } else if (e.type === "swiperight") {
+                    $("#left-panel").panel("open");
+                }
+            }
         });
     });
 </script>
-
-</html>
 <style>
-    .main {
-        font-family: 'Roboto', sans-serif;
-        color: white;
-        font-size: 60pt;
-        text-align: center;
+    /* Swipe works with mouse as well but often causes text selection. */
+    /* We'll deny text selecton on everything but INPUTs and TEXTAREAs. */
+    #demo-page :not(INPUT):not(TEXTAREA) {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
     }
 
-    #details {
-        font-family: 'Roboto', sans-serif;
-        color: white;
-        font-size: 10pt;
-        text-align: center;
+    /* Content styling. */
+    dl {
+        font-family: "Times New Roman", Times, serif;
+        padding: 1em;
+    }
+
+    dt {
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    dt span {
+        font-size: .5em;
+        color: #777;
+        margin-left: .5em;
+    }
+
+    dd {
+        font-size: 1.25em;
+        margin: 1em 0 0;
+        padding-bottom: 1em;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-btn {
+        float: right;
+        margin: 0 2em 1em 0;
     }
 </style>
