@@ -49,7 +49,7 @@
                 $.each(p.detail.supply_token_list, function (index, x) {
                     val = val + +((x.amount * x.price).toFixed(2));
                 });
-                tokenList += " " + val.toFixed(2);
+                tokenList += " $" + val.toFixed(2);
                 $('<div/>', {
                     // id: someID,
                     // className: 'foobar',
