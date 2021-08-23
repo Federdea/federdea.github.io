@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Brrr</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+</head>
+
+<body style="background-color: #4BB543;">
+    <div class="main" style="visibility: hidden;">...</div>
+    <div class="main" id="tot">...</div>
+    <div class="main" id="profit">...</div>
+    <div class="main" onclick='window.location.reload()'><span style='font-size:100px;'>&#128640;</span></div>
+    <div class="main" style="visibility: hidden;">...</div>
+    <div id="details"></div>
+</body>
+<script>
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        var address = urlParams.get('w');
+        if (address == "" || address == null) { address = "0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe" }
+        $.ajax({
+            // url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=0x0a8a1aa8b0634b30ecdb0ab5707b3fd900195afe"
+            url: "https://api.debank.com/portfolio/list?project_id=matic_beefy&user_addr=" + address
+        }).then(function (response) {
+            console.log(response);
+            // $("#tot").html(response.data.portfolio_list[0].stats.net_usd_value.toFixed(2));
+            // $("#profit").html(response.data.portfolio_list[0].stats.daily_yield_usd_value.toFixed(2));
+
+            var mainTot = 0;
+            var mainProfit = 0;
+            $.each(response.data.portfolio_list, function (index, p) {
+                mainTot += p.stats.net_usd_value;
+                mainProfit += p.stats.daily_yield_usd_value;
+                $("#tot").html("$" + mainTot.toFixed(2));
+                $("#profit").html("$" + mainProfit.toFixed(2));
+            });
+
+            $.each(response.data.portfolio_list, function (index, p) {
+                var tokenList = "";
+                var val = 0;
+                $.each(p.detail.supply_token_list, function (index, x) {
+                    tokenList += x.symbol + "/";
+                });
+                tokenList = tokenList.slice(0, -1);
+                $.each(p.detail.supply_token_list, function (index, x) {
+                    val = val + +((x.amount * x.price).toFixed(2));
+                });
+                tokenList += " $" + val.toFixed(2);
+                $('<div/>', {
+                    // id: someID,
+                    // className: 'foobar',
+                    html: tokenList
+                }).appendTo("#details");
+            });
+        });
+    });
+</script>
+
+</html>
+<style>
+    .main {
+        font-family: 'Roboto', sans-serif;
+        color: white;
+        font-size: 60pt;
+        text-align: center;
+    }
+
+    #details {
+        font-family: 'Roboto', sans-serif;
+        color: white;
+        font-size: 10pt;
+        text-align: center;
+    }
+</style>
